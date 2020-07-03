@@ -1,0 +1,13 @@
+container:
+  id: 'Nginx'
+  name: 'hoge'
+  type: 'whitelist'
+  allow:
+    - process:
+        name: 'netcat'
+        path: '/usr/local/bin/nc'
+        exec: 'nc'
+      socket:
+        - protocol: 'tcp'
+          ip: 'localhost'
+          port: 8888

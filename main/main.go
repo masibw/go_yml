@@ -2,50 +2,30 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
+
+	"gopkg.in/yaml.v2"
 )
-var data = `
-a: Easy!
-b:
-  c: 2
-  d: [3, 4]
-  e: 5
-`
-
-
+// Note: struct fields must be public in order for unmarshal to
+// correctly populate the data.
 type T struct {
 	A string
-	B struct{
-		RenamedC int `yaml:"c"`
-		D []int `yaml:",flow"`
+	B struct {
+		RenamedC int   `yaml:"c"`
+		D        []int `yaml:",flow"`
 	}
 }
 
-func main(){
-	t :=T{}
-	err:=yaml.Unmarshal([]byte(data),&t)
-	if err!=nil{
-		log.Fatalf("error: %v",err)
-	}
-
-	fmt.Printf("----t:\n%v\n\n",t.B.D)
-
-	d,err:=yaml.Marshal(&t)
+func main() {
+	var m map[interface{}]interface{}
+	buf, err := ioutil.ReadFile("main/test.yml")
 	if err !=nil{
-		log.Fatalf("error: %v",err)
+		log.Fatalf("error:%v",err)
 	}
-	fmt.Printf("---t dump:\n%s\n\n",string(d))
-	m:=make(map[interface{}]interface{})
-
-	err = yaml.Unmarshal([]byte(data),&m)
-	if err !=nil{
-		log.Fatalf("error: %v",err)
+	err = yaml.Unmarshal([]byte(buf), &m)
+	if err != nil {
+		log.Fatalf("error: %v", err)
 	}
-	fmt.Printf("--- m:\n%v\n\n",m)
-	d,err = yaml.Marshal(&m)
-	if err !=nil{
-		log.Fatalf("error: %v",err)
-	}
-	fmt.Printf("--- m dump:\n%s\n\n",string(d))
+	fmt.Printf("--- m:\n%v\n\n", m)
 }
