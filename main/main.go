@@ -7,15 +7,6 @@ import (
 
 	"gopkg.in/yaml.v2"
 )
-// Note: struct fields must be public in order for unmarshal to
-// correctly populate the data.
-type T struct {
-	A string
-	B struct {
-		RenamedC int   `yaml:"c"`
-		D        []int `yaml:",flow"`
-	}
-}
 
 func main() {
 	var m map[interface{}]interface{}
@@ -23,9 +14,16 @@ func main() {
 	if err !=nil{
 		log.Fatalf("error:%v",err)
 	}
+
+	//mに読み込んだyamlをマッピングする
 	err = yaml.Unmarshal([]byte(buf), &m)
 	if err != nil {
 		log.Fatalf("error: %v", err)
 	}
-	fmt.Printf("--- m:\n%v\n\n", m)
+	//mapがkeyを持っていればifの中に入る
+	if content,ok:=m["container"].(map[interface{}]interface{})["allow"].([]interface{})[0].(map[interface{}]interface{})["process"].(map[interface{}]interface{})["name"]; ok{
+		fmt.Print(content)
+	}
+
+
 }

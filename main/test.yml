@@ -1,5 +1,5 @@
 container:
-  id: 'Nginx'
+  id: 'XXXXXX'
   name: 'hoge'
   type: 'whitelist'
   allow:
