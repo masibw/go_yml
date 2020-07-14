@@ -12,7 +12,7 @@ type Containers []struct {
 	Container struct {
 		Id         string `yaml:id`
 		Name       string `yaml:name`
-		PolicyType string `yaml:type`
+		Type string `yaml:type`
 		Allow      struct {
 			Process []struct {
 				Name string `yaml:name`
@@ -40,6 +40,6 @@ func main() {
 		log.Fatalf("error: %v", err)
 	}
 	//mapがkeyを持っていればifの中に入る
-	fmt.Println(containers[0].Container.Allow.Process[0].Name)
+	fmt.Println(containers[0])
 	fmt.Println(containers[0].Container.Allow.Process[1].Name)
 }
