@@ -8,22 +8,38 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func main() {
-	var m map[interface{}]interface{}
-	buf, err := ioutil.ReadFile("main/test.yml")
-	if err !=nil{
-		log.Fatalf("error:%v",err)
-	}
+type Containers []struct {
+	Container struct {
+		Id         string `yaml:id`
+		Name       string `yaml:name`
+		PolicyType string `yaml:type`
+		Allow      struct {
+			Process []struct {
+				Name string `yaml:name`
+				Path string `yaml:path`
+				Exec string `yaml:exec`
+			} `yaml:process`
+			Socket []struct {
+				Protocol string `yaml:protocol`
+				Ip       string `yaml:ip`
+				Port     int    `yaml:port`
+			} `yaml:socket`
+		} `yaml:allow`
+	} `yaml:container`
+}
 
-	//mに読み込んだyamlをマッピングする
-	err = yaml.Unmarshal([]byte(buf), &m)
+func main() {
+	//var m map[interface{}]interface{}
+	buf, err := ioutil.ReadFile("main/test.yml")
+	if err != nil {
+		log.Fatalf("error:%v", err)
+	}
+	containers := Containers{}
+	err = yaml.Unmarshal([]byte(buf), &containers)
 	if err != nil {
 		log.Fatalf("error: %v", err)
 	}
 	//mapがkeyを持っていればifの中に入る
-	if content,ok:=m["container"].(map[interface{}]interface{})["allow"].([]interface{})[0].(map[interface{}]interface{})["process"].(map[interface{}]interface{})["name"]; ok{
-		fmt.Print(content)
-	}
-
-
+	fmt.Println(containers[0].Container.Allow.Process[0].Name)
+	fmt.Println(containers[0].Container.Allow.Process[1].Name)
 }
